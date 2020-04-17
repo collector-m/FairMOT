@@ -206,7 +206,7 @@ class LoadImagesAndLabels:  # for training
             import matplotlib.pyplot as plt
             plt.figure(figsize=(50, 50))
             plt.imshow(img[:, :, ::-1])
-            plt.plot(labels[:, [1, 3, 3, 1, 1]].T, labels[:, [2, 2, 4, 4, 2]].T, '.-')
+            plt.plot(labels[:, [2, 4, 4, 2, 2]].T, labels[:, [3, 3, 5, 5, 3]].T, '.-')
             plt.axis('off')
             plt.savefig('test.jpg')
             time.sleep(10)
@@ -395,7 +395,7 @@ class JointDataset(LoadImagesAndLabels):  # for training
         self.nF = sum(self.nds)
         self.width = img_size[0]
         self.height = img_size[1]
-        self.max_objs = 400
+        self.max_objs = opt.K
         self.augment = augment
         self.transforms = transforms
 
