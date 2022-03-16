@@ -67,7 +67,7 @@ def write_results_score(filename, results, data_type):
     logger.info('save results to {}'.format(filename))
 
 
-def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_image=True, frame_rate=30):
+def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_image=True, frame_rate=30, use_cuda=True):
     if save_dir:
         mkdir_if_missing(save_dir)
     tracker = JDETracker(opt, frame_rate=frame_rate)
@@ -83,7 +83,10 @@ def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_im
 
         # run tracking
         timer.tic()
-        blob = torch.from_numpy(img).cuda().unsqueeze(0)
+        if use_cuda:
+            blob = torch.from_numpy(img).cuda().unsqueeze(0)
+        else:
+            blob = torch.from_numpy(img).unsqueeze(0)
         online_targets = tracker.update(blob, img0)
         online_tlwhs = []
         online_ids = []
@@ -219,14 +222,6 @@ if __name__ == '__main__':
                       MOT17-08-SDP
                       MOT17-12-SDP
                       MOT17-14-SDP'''
-        #seqs_str = '''MOT17-01-SDP
-                      #MOT17-06-SDP
-                      #MOT17-07-SDP
-                      #MOT17-12-SDP
-                      #'''
-        #seqs_str = '''MOT17-01-SDP MOT17-07-SDP MOT17-12-SDP MOT17-14-SDP'''
-        #seqs_str = '''MOT17-03-SDP'''
-        #seqs_str = '''MOT17-06-SDP MOT17-08-SDP'''
         data_root = os.path.join(opt.data_dir, 'MOT17/images/test')
     if opt.val_mot17:
         seqs_str = '''MOT17-02-SDP
@@ -236,7 +231,6 @@ if __name__ == '__main__':
                       MOT17-10-SDP
                       MOT17-11-SDP
                       MOT17-13-SDP'''
-        #seqs_str = '''MOT17-02-SDP'''
         data_root = os.path.join(opt.data_dir, 'MOT17/images/train')
     if opt.val_mot15:
         seqs_str = '''Venice-2
@@ -251,7 +245,6 @@ if __name__ == '__main__':
                       ADL-Rundle-8
                       ETH-Pedcross2
                       TUD-Stadtmitte'''
-        #seqs_str = '''Venice-2'''
         data_root = os.path.join(opt.data_dir, 'MOT15/images/train')
     if opt.val_mot20:
         seqs_str = '''MOT20-01

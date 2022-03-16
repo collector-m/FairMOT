@@ -64,7 +64,6 @@ def main(opt):
         model, optimizer, start_epoch = load_model(
             model, opt.load_model, trainer.optimizer, opt.resume, opt.lr, opt.lr_step)
 
-    best = 1e10
     for epoch in range(start_epoch + 1, opt.num_epochs + 1):
         mark = epoch if opt.save_all else 'last'
         log_dict_train, _ = trainer.train(epoch, train_loader)
@@ -94,6 +93,5 @@ def main(opt):
 
 
 if __name__ == '__main__':
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0, 1'
     opt = opts().parse()
     main(opt)
